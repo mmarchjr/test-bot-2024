@@ -1,0 +1,29 @@
+{
+  "HALProvider": {
+    "Other Devices": {
+      "ADIS16470[0]": {
+        "header": {
+          "open": true
+        }
+      },
+      "SPARK MAX [8]": {
+        "header": {
+          "open": true
+        }
+      }
+    }
+  },
+  "NTProvider": {
+    "types": {
+      "/FMSInfo": "FMSInfo",
+      "/SmartDashboard/Autonomous": "String Chooser",
+      "/SmartDashboard/drive mode selector": "String Chooser",
+      "/SmartDashboard/rate limit?": "String Chooser"
+    }
+  },
+  "NetworkTables": {
+    "Persistent Values": {
+      "open": false
+    }
+  }
+}

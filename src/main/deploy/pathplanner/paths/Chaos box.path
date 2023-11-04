@@ -1,0 +1,119 @@
+{
+  "version": 1.0,
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 0.0,
+        "y": 5.0
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 0.1,
+        "y": 5.0
+      },
+      "isLocked": false
+    },
+    {
+      "anchor": {
+        "x": 1.0,
+        "y": 5.0
+      },
+      "prevControl": {
+        "x": 1.0,
+        "y": 4.9
+      },
+      "nextControl": {
+        "x": 1.0,
+        "y": 5.1
+      },
+      "isLocked": false
+    },
+    {
+      "anchor": {
+        "x": 1.0,
+        "y": 4.0
+      },
+      "prevControl": {
+        "x": 1.1,
+        "y": 4.0
+      },
+      "nextControl": {
+        "x": 0.9,
+        "y": 4.0
+      },
+      "isLocked": false
+    },
+    {
+      "anchor": {
+        "x": 0.0,
+        "y": 4.0
+      },
+      "prevControl": {
+        "x": 0.10000000000000002,
+        "y": 4.0
+      },
+      "nextControl": {
+        "x": -0.10000000000000002,
+        "y": 4.0
+      },
+      "isLocked": false
+    },
+    {
+      "anchor": {
+        "x": 0.0,
+        "y": 5.0
+      },
+      "prevControl": {
+        "x": -0.1,
+        "y": 5.0
+      },
+      "nextControl": null,
+      "isLocked": false
+    }
+  ],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.5,
+      "rotationDegrees": 90.0
+    },
+    {
+      "waypointRelativePos": 1.0,
+      "rotationDegrees": 180.0
+    },
+    {
+      "waypointRelativePos": 1.5,
+      "rotationDegrees": -90.0
+    },
+    {
+      "waypointRelativePos": 2.5,
+      "rotationDegrees": 1.2468653916036803
+    },
+    {
+      "waypointRelativePos": 3.0,
+      "rotationDegrees": 91.16533413020112
+    },
+    {
+      "waypointRelativePos": 3.5,
+      "rotationDegrees": -90.0
+    },
+    {
+      "waypointRelativePos": 4.0,
+      "rotationDegrees": 0
+    }
+  ],
+  "constraintZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 1.0,
+    "maxAcceleration": 3.0,
+    "maxAngularVelocity": 100.0,
+    "maxAngularAcceleration": 720
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 0
+  },
+  "reversed": false,
+  "folder": null,
+  "previewStartingState": null
+}
