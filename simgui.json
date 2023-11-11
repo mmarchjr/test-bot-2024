@@ -16,8 +16,11 @@
   "NTProvider": {
     "types": {
       "/FMSInfo": "FMSInfo",
+      "/SmartDashboard/Auto Chooser": "String Chooser",
       "/SmartDashboard/Autonomous": "String Chooser",
       "/SmartDashboard/drive mode selector": "String Chooser",
+      "/SmartDashboard/field oriented": "String Chooser",
+      "/SmartDashboard/rate limit": "String Chooser",
       "/SmartDashboard/rate limit?": "String Chooser"
     }
   },

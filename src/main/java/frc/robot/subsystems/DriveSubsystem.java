@@ -4,14 +4,9 @@
 
 package frc.robot.subsystems;
 
-//import org.littletonrobotics.junction.Logger;
 
-import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.pathfinding.Pathfinding;
-import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
-import com.pathplanner.lib.util.PIDConstants;
-import com.pathplanner.lib.util.PathPlannerLogging;
-import com.pathplanner.lib.util.ReplanningConfig;
+import org.littletonrobotics.junction.Logger;
+
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -20,10 +15,8 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.util.WPIUtilJNI;
 import edu.wpi.first.wpilibj.ADIS16470_IMU;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.DriveConstants;
 //import frc.utils.LocalADStarAK;
@@ -115,8 +108,10 @@ public class DriveSubsystem extends SubsystemBase {
   }
 
   public void periodic() {
-    //Logger.recordOutput("Odometry/CurrentStates",getstates());
-    //Logger.recordOutput("Odometry/position", m_odometry.getPoseMeters());
+    Logger.recordOutput("Odometry/CurrentStates",getstates());
+    Logger.recordOutput("Odometry/CurrentRotationDegrees",getHeading());
+    Logger.recordOutput("Odometry/CurrentRotationRotation2d",Rotation2d.fromDegrees(getHeading()));
+    Logger.recordOutput("Odometry/position", m_odometry.getPoseMeters());
     // Update the odometry in the periodic block
     m_odometry.update(
         Rotation2d.fromDegrees(m_gyro.getAngle()),
@@ -301,6 +296,7 @@ public void resetPosition(Pose2d pose) {
   public void setModuleStates(SwerveModuleState[] desiredStates) {
     SwerveDriveKinematics.desaturateWheelSpeeds(
         desiredStates, DriveConstants.kMaxSpeedMetersPerSecond);
+        
     m_frontLeft.setDesiredState(desiredStates[0]);
     m_frontRight.setDesiredState(desiredStates[1]);
     m_rearLeft.setDesiredState(desiredStates[2]);
