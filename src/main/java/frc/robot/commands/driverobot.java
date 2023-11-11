@@ -6,7 +6,9 @@ package frc.robot.commands;
 
 import java.util.function.BooleanSupplier;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.XboxController;
@@ -25,9 +27,20 @@ public class driverobot extends Command {
   double y = 0; // variable for forward/backward movement
   double x = 0; // variable for side to side movement
   double turn = 0; // variable for turning movement
-  PIDController pid = new PIDController(0.0004, 0, 0);
+  PIDController turnController;
   
+  /* The following PID Controller coefficients will need to be tuned */
+  /* to match the dynamics of your drive system.  Note that the      */
+  /* SmartDashboard in Test mode has support for helping you tune    */
+  /* controllers by displaying a form where you can enter new P, I,  */
+  /* and D constants and test the mechanism.                         */
   
+  static final double kP = 0.02;
+  static final double kI = 0.00;
+  static final double kD = 0.00;
+  static final double kF = 0.00;
+  static final double kToleranceDegrees = 2.0f;
+
   XboxController m_driverController = new XboxController(OIConstants.kDriverControllerPort);
 
   public driverobot() {
@@ -37,25 +50,14 @@ public class driverobot extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    pid.setTolerance(5);
+    turnController = new PIDController(kP, kI, kD);
+    turnController.enableContinuousInput(-180.0f,  180.0f);
+    turnController.setTolerance(kToleranceDegrees);
     angle = RobotContainer.m_robotDrive.getHeading();
-    pid.enableContinuousInput(-180,180);
+
     
   }
-private void Turntoangle() {
-  int setangle = m_driverController.getPOV();
-    double gyroAngle = RobotContainer.m_robotDrive.getHeading();
 
-    // Ensure the angle wraps around from -180 to 180 degrees
-    //gyroAngle = (gyroAngle + 180.0) % 360.0 - 180.0;
-           RobotContainer.m_robotDrive.drive(
-              0, // forwards(divided by 10)
-              0, // sideways(divided by 10)
-              -pid.calculate(gyroAngle,setangle), // rotation(divided by 10)
-              false,
-              RobotContainer.ratelimitChooser.getSelected() // limit max speed
-              );
-}
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
@@ -91,14 +93,48 @@ SmartDashboard.putNumber("gyro", RobotContainer.m_robotDrive.getHeading());
        //new RunCommand(() -> Turntoangle(), RobotContainer.m_robotDrive).until(() -> pid.atSetpoint());
 // Ensure the angle wraps around from -180 to 180 degrees
     } else*/ 
-     if (m_driverController.getXButton()) {
-RobotContainer.m_robotDrive.drive(
-          -y /2, // forwards(divided by 4)
-          -x /2, // sideways(divided by 4)
-          -pid.calculate(RoaringUtils.GyroUtils.WrapAngleDegreesHalf(RobotContainer.m_robotDrive.getHeading()),0), // rotation(divided by 4)
+    
+    
+          boolean rotateToAngle = false;
+          if (m_driverController.getPOV()==0) {
+              turnController.setSetpoint(0.0f);
+              rotateToAngle = true;
+          } else if (m_driverController.getPOV()==90) {
+              turnController.setSetpoint(-90.0f);//inverted
+              rotateToAngle = true;
+          } else if (m_driverController.getPOV()==180) {
+              turnController.setSetpoint(179.9f);
+              rotateToAngle = true;
+          } else if (m_driverController.getPOV()==270) {
+              turnController.setSetpoint(90.0f);//inverted
+              rotateToAngle = true;
+          }
+          double currentRotationRate;
+          if ( rotateToAngle ) {
+              currentRotationRate = MathUtil.clamp(turnController.calculate(RobotContainer.m_robotDrive.getHeading()),-1,1); // rotation(divided by 4)
+;
+          } else {
+              currentRotationRate = -turn;
+          }
+          try {
+            RobotContainer.m_robotDrive.drive(
+          -y / 2, // forwards(divided by 4)
+          -x / 2, // sideways(divided by 4)
+          currentRotationRate/2,
           RobotContainer.fieldoriented.getSelected(), // field oriented
           RobotContainer.ratelimitChooser.getSelected() // limit max speed
-          );    } else if (x==0 && y==0 && turn==0){
+          );
+              /* Use the joystick X axis for lateral movement,          */
+              /* Y axis for forward movement, and the current           */
+              /* calculated rotation rate (or joystick Z axis),         */
+              /* depending upon whether "rotate to angle" is active.    */
+              //myRobot.mecanumDrive_Cartesian(stick.getX(), stick.getY(), 
+              //                               currentRotationRate, ahrs.getAngle());
+          } catch( RuntimeException ex ) {
+              DriverStation.reportError("Error communicating with drive system:  " + ex.getMessage(), true);
+          }
+
+    /*if (x==0 && y==0 && turn==0){
       RobotContainer.m_robotDrive.setX();
     } else {
       RobotContainer.m_robotDrive.drive(
@@ -108,7 +144,7 @@ RobotContainer.m_robotDrive.drive(
           RobotContainer.fieldoriented.getSelected(), // field oriented
           RobotContainer.ratelimitChooser.getSelected() // limit max speed
           );
-    }
+    }*/
 
 
 
