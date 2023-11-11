@@ -28,6 +28,7 @@ public class driverobot extends Command {
   double x = 0; // variable for side to side movement
   double turn = 0; // variable for turning movement
   PIDController turnController;
+  double pastTurn = 0;
   
   /* The following PID Controller coefficients will need to be tuned */
   /* to match the dynamics of your drive system.  Note that the      */
@@ -96,6 +97,9 @@ SmartDashboard.putNumber("gyro", RobotContainer.m_robotDrive.getHeading());
     
     
           boolean rotateToAngle = false;
+           if (turn != pastTurn) {
+              turnController.setSetpoint(RobotContainer.m_robotDrive.getHeading());
+          }
           if (m_driverController.getPOV()==0) {
               turnController.setSetpoint(0.0f);
               rotateToAngle = true;
@@ -114,7 +118,11 @@ SmartDashboard.putNumber("gyro", RobotContainer.m_robotDrive.getHeading());
               currentRotationRate = MathUtil.clamp(turnController.calculate(RobotContainer.m_robotDrive.getHeading()),-1,1); // rotation(divided by 4)
 ;
           } else {
+            if (turn == 0) {
+              currentRotationRate = MathUtil.clamp(turnController.calculate(RobotContainer.m_robotDrive.getHeading()),-1,1);
+            } else {
               currentRotationRate = -turn;
+            }
           }
           try {
             RobotContainer.m_robotDrive.drive(
@@ -133,7 +141,7 @@ SmartDashboard.putNumber("gyro", RobotContainer.m_robotDrive.getHeading());
           } catch( RuntimeException ex ) {
               DriverStation.reportError("Error communicating with drive system:  " + ex.getMessage(), true);
           }
-
+          pastTurn = turn;
     /*if (x==0 && y==0 && turn==0){
       RobotContainer.m_robotDrive.setX();
     } else {

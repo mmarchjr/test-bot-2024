@@ -37,6 +37,7 @@ import java.nio.file.Path;
  * 
  * 
  * ## CHECK FOR LOOSE PARTS BEFORE RUNNING ON GROUND
+ * ## CALIBRATE WHEELS AT START OF EVERY DAY
  */
 public class RobotContainer {
   // The robot's subsystems
