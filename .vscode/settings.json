@@ -25,5 +25,16 @@
       }
     },
   ],
-  "java.test.defaultConfig": "WPIlibUnitTests"
+  "java.test.defaultConfig": "WPIlibUnitTests",
+  "graalvm.installations": [
+    "c:\\Users\\mmarc\\graal\\graalvm-ce-java17-22.3.3\\graalvm-ce-java11-22.3.3"
+  ],
+  "java.configuration.runtimes": [
+    {
+      "name": "JavaSE-11",
+      "path": "c:\\Users\\mmarc\\graal\\graalvm-ce-java17-22.3.3\\graalvm-ce-java11-22.3.3"
+    }
+  ],
+  "graalvm.home": "c:\\Users\\mmarc\\graal\\graalvm-ce-java17-22.3.3\\graalvm-ce-java11-22.3.3",
+  "java.jdt.ls.vmargs": "-XX:+UseParallelGC -XX:GCTimeRatio=4 -XX:AdaptiveSizePolicyWeight=90 -Dsun.zip.disableMemoryMapping=true -Xmx2G -Xms100m -Xlog:disable"
 }

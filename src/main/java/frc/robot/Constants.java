@@ -10,7 +10,7 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 
-/**
+/*
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
  * constants. This class should not be used for any other purpose. All constants should be declared
  * globally (i.e. public static). Do not put anything functional in this class.
@@ -22,7 +22,7 @@ public final class Constants {
 
   public static final Mode currentMode = Mode.REAL;
 
-  public static enum Mode {
+  public enum Mode {
     /** Running on a real robot. */
     REAL,
 
@@ -33,7 +33,11 @@ public final class Constants {
     REPLAY
   }
 
+
   public static final class DriveConstants {
+    private DriveConstants() {
+
+    }
     // Driving Parameters - Note that these are not the maximum capable speeds of
     // the robot, rather the allowed maximum speeds
     public static final double kMaxSpeedMetersPerSecond = 4.8;
@@ -75,6 +79,7 @@ public final class Constants {
   }
 
   public static final class ModuleConstants {
+    private ModuleConstants(){}
     // The MAXSwerve module can be configured with one of three pinion gears: 12T, 13T, or 14T.
     // This changes the drive speed of the module (a pinion gear with more teeth will result in a
     // robot that drives faster).
@@ -125,16 +130,19 @@ public final class Constants {
     public static final IdleMode kDrivingMotorIdleMode = IdleMode.kBrake;
     public static final IdleMode kTurningMotorIdleMode = IdleMode.kBrake;
 
+    //setting the driving motor current limit will be an in-season project, for now 50A is an ok default
     public static final int kDrivingMotorCurrentLimit = 50; // amps
     public static final int kTurningMotorCurrentLimit = 20; // amps
   }
 
   public static final class OIConstants {
+    private OIConstants(){}
     public static final int kDriverControllerPort = 0;
     public static final double kDriveDeadband = 0.05;
   }
 
   public static final class AutoConstants {
+    private AutoConstants(){}
     public static final double kMaxSpeedMetersPerSecond = 3;
     public static final double kMaxAccelerationMetersPerSecondSquared = 3;
     public static final double kMaxAngularSpeedRadiansPerSecond = Math.PI;
@@ -155,6 +163,7 @@ public final class Constants {
   }
 
   public static final class NeoMotorConstants {
+    private NeoMotorConstants(){}
     public static final double kFreeSpeedRpm = 5676;
   }
 }

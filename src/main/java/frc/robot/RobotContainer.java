@@ -5,29 +5,21 @@
 package frc.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.path.PathPlannerPath;
-import com.pathplanner.lib.path.PathPlannerTrajectory;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
 
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.OIConstants;
-import frc.robot.commands.driverobot;
+import frc.robot.commands.driveRobot;
 import frc.robot.subsystems.DriveSubsystem;
-import java.io.File;
-import java.nio.file.Path;
-
-//import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 /*
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
@@ -43,7 +35,7 @@ public class RobotContainer {
   // The robot's subsystems
 
   public static final DriveSubsystem m_robotDrive = new DriveSubsystem();
-  public static final driverobot c_driverobot = new driverobot();
+  public static final driveRobot c_driveRobot = new driveRobot();
   SendableChooser<Command> autoChooser = new SendableChooser<Command>();
   public static SendableChooser<Boolean> fieldoriented = new SendableChooser<Boolean>();
   public static SendableChooser<Boolean> ratelimitChooser = new SendableChooser<Boolean>();
@@ -80,6 +72,8 @@ public class RobotContainer {
 
     ratelimitChooser.setDefaultOption("false", false);
     ratelimitChooser.addOption("true", true);
+SmartDashboard.putData(ratelimitChooser);
+SmartDashboard.putData(fieldoriented);
 
     configureButtonBindings();
     /*File deploy = Filesystem.getDeployDirectory();
@@ -96,8 +90,8 @@ public class RobotContainer {
       }
     }*/
     // String pathplannerlocation = ;
-SmartDashboard.putData("field oriented", fieldoriented);
-SmartDashboard.putData("rate limit", ratelimitChooser);
+//SmartDashboard.putData("field oriented", fieldoriented);
+//SmartDashboard.putData("rate limit", ratelimitChooser);
 //SmartDashboard.putData("auto", autoChooser);
 autoChooser = AutoBuilder.buildAutoChooser();
 
@@ -107,7 +101,7 @@ autoChooser = AutoBuilder.buildAutoChooser();
 SmartDashboard.putData("Auto Chooser", autoChooser);
 
     // Configure default commands
-    m_robotDrive.setDefaultCommand(c_driverobot);
+    m_robotDrive.setDefaultCommand(c_driveRobot);
     m_robotDrive.resetOdometry(PathPlannerPath.fromPathFile("2 meter-straight").getStartingDifferentialPose());
 
   }

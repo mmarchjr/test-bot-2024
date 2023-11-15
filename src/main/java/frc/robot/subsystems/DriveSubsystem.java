@@ -5,8 +5,6 @@
 package frc.robot.subsystems;
 
 
-import org.littletonrobotics.junction.Logger;
-
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -108,10 +106,6 @@ public class DriveSubsystem extends SubsystemBase {
   }
 
   public void periodic() {
-    Logger.recordOutput("Odometry/CurrentStates",getstates());
-    Logger.recordOutput("Odometry/CurrentRotationDegrees",getHeading());
-    Logger.recordOutput("Odometry/CurrentRotationRotation2d",Rotation2d.fromDegrees(getHeading()));
-    Logger.recordOutput("Odometry/position", m_odometry.getPoseMeters());
     // Update the odometry in the periodic block
     m_odometry.update(
         Rotation2d.fromDegrees(m_gyro.getAngle()),
@@ -271,7 +265,7 @@ public void resetPosition(Pose2d pose) {
     m_rearLeft.setDesiredState(swerveModuleStates[2]);
     m_rearRight.setDesiredState(swerveModuleStates[3]);
   }
-  ;
+  
 
   /** Sets the wheels into an X formation to prevent movement. */
   public void setX() {
@@ -282,10 +276,10 @@ public void resetPosition(Pose2d pose) {
   }
 
   public void set0() {
-    m_frontLeft.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(0)));
-    m_frontRight.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(0)));
-    m_rearLeft.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(0)));
-    m_rearRight.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(0)));
+    m_frontLeft.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(-45)));
+    m_frontRight.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(45)));
+    m_rearLeft.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(45)));
+    m_rearRight.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(-45)));
   }
 
   /**
