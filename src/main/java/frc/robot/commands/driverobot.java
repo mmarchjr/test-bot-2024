@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.OIConstants;
 import frc.robot.RobotContainer;
 import frc.utils.RoaringUtils;
@@ -36,8 +37,9 @@ public class driveRobot extends Command {
   static final double kD = 0.00;
   static final double kF = 0.00;
   static final double kToleranceDegrees = 2.0f;
+  boolean rotateToAngle;
 
-  XboxController m_driverController = new XboxController(OIConstants.kDriverControllerPort);
+  CommandXboxController m_driverController = new CommandXboxController(OIConstants.kDriverControllerPort);
 
   public driveRobot() {
     // Use addRequirements() here to declare subsystem dependencies.
@@ -65,30 +67,37 @@ public class driveRobot extends Command {
 SmartDashboard.putNumber("gyro", RobotContainer.m_robotDrive.getHeading());
 
 
-    y=RoaringUtils.DeadzoneUtils.LinearDeadband(m_driverController.getRightY(),0.1);
-    x=RoaringUtils.DeadzoneUtils.LinearDeadband(m_driverController.getRightX(),0.1);
- turn=RoaringUtils.DeadzoneUtils.LinearDeadband(m_driverController.getLeftX(),0.1);
+    y=RoaringUtils.DeadzoneUtils.LinearDeadband(m_driverController.getRightY(),0.15);
+    x=RoaringUtils.DeadzoneUtils.LinearDeadband(m_driverController.getRightX(),0.15);
+ turn=RoaringUtils.DeadzoneUtils.LinearDeadband(m_driverController.getLeftX(),0.15);
     
 
     
-    
-          boolean rotateToAngle = false;
+        if (turnController.atSetpoint() && rotateToAngle) {
+          rotateToAngle = false;
+        } else if (!turnController.atSetpoint() && rotateToAngle){
+          rotateToAngle = true;
+        } else {
+          rotateToAngle = false;
+        }
+          
+
            if (turn != pastTurn) {
               turnController.setSetpoint(RobotContainer.m_robotDrive.getHeading());
           }
-          if (m_driverController.getBButton()) {
+          if (m_driverController.b().getAsBoolean()) {
           turnController.setSetpoint(RobotContainer.m_robotDrive.getHeading());
         }
-          if (m_driverController.getPOV()==0) {
+          if (m_driverController.povUp().getAsBoolean()) {
               turnController.setSetpoint(0.0f);
               rotateToAngle = true;
-          } else if (m_driverController.getPOV()==90) {
+          } else if (m_driverController.povRight().getAsBoolean()) {
               turnController.setSetpoint(-90.0f);//inverted
               rotateToAngle = true;
-          } else if (m_driverController.getPOV()==180) {
+          } else if (m_driverController.povDown().getAsBoolean()) {
               turnController.setSetpoint(179.9f);
               rotateToAngle = true;
-          } else if (m_driverController.getPOV()==270) {
+          } else if (m_driverController.povLeft().getAsBoolean()) {
               turnController.setSetpoint(90.0f);//inverted
               rotateToAngle = true;
           }
@@ -104,9 +113,9 @@ SmartDashboard.putNumber("gyro", RobotContainer.m_robotDrive.getHeading());
                 currentRotationRate = MathUtil.clamp(turnController.calculate(RobotContainer.m_robotDrive.getHeading()),-1,1);
               }
             
-          if (y==0 && x==0 && turn == 0 && m_driverController.getPOV() == -1){
+          if (y==0 && x==0 && turn == 0 && turnController.atSetpoint()){
             RobotContainer.m_robotDrive.setX();
-          } else {
+          }else {
             RobotContainer.m_robotDrive.drive(
           -y / 2, // forwards(divided by 4)
           -x / 2, // sideways(divided by 4)
@@ -124,17 +133,18 @@ SmartDashboard.putNumber("gyro", RobotContainer.m_robotDrive.getHeading());
 
 
 
-    if (m_driverController.getYButton()) {
+    if (m_driverController.y().getAsBoolean()) {
       RobotContainer.m_robotDrive.resetGyro();
-      m_driverController.setRumble(RumbleType.kBothRumble, 0.5);
+      turnController.setSetpoint(RobotContainer.m_robotDrive.getHeading());
+      m_driverController.getHID().setRumble(RumbleType.kBothRumble, 0.5);
     } else {
-      m_driverController.setRumble(RumbleType.kBothRumble, 0);
+      m_driverController.getHID().setRumble(RumbleType.kBothRumble, 0);
     }
   }
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-
+//nothing to end
   }
 
   // Returns true when the command should end.

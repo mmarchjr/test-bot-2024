@@ -16,10 +16,12 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.driveRobot;
 import frc.robot.subsystems.DriveSubsystem;
+
 
 /*
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
@@ -40,7 +42,7 @@ public class RobotContainer {
   public static SendableChooser<Boolean> fieldoriented = new SendableChooser<Boolean>();
   public static SendableChooser<Boolean> ratelimitChooser = new SendableChooser<Boolean>();
   // The driver's controller
-  public XboxController m_driverController = new XboxController(OIConstants.kDriverControllerPort);
+  public CommandXboxController m_driverController = new CommandXboxController(OIConstants.kDriverControllerPort);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -113,8 +115,8 @@ SmartDashboard.putData("Auto Chooser", autoChooser);
    * {@link JoystickButton}.
    */
   private void configureButtonBindings() {
-    new JoystickButton(m_driverController, 3)
-        .whileTrue(new RunCommand(() -> m_robotDrive.setX(), m_robotDrive));
+    
+        m_driverController.x().whileTrue(new RunCommand(() -> m_robotDrive.setX(), m_robotDrive));
     /*new JoystickButton(m_driverController, 4)
     .whileTrue(new RunCommand(
         () -> m_robotDrive.set0(),

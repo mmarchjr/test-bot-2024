@@ -9,12 +9,15 @@ import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.util.WPIUtilJNI;
 import edu.wpi.first.wpilibj.ADIS16470_IMU;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.DriveConstants;
 //import frc.utils.LocalADStarAK;
@@ -48,8 +51,10 @@ public class DriveSubsystem extends SubsystemBase {
 
   // The gyro sensor
   public final ADIS16470_IMU m_gyro = new ADIS16470_IMU();
+  private Field2d m_field = new Field2d();
+
   // Slew rate filter variables for controlling lateral acceleration
-  private double m_currentRotation = 0.0;
+  private double m_currentRotation;
   private double m_currentTranslationDir = 0.0;
   private double m_currentTranslationMag = 0.0;
   private double gyroOffset = 0;
@@ -104,9 +109,20 @@ public class DriveSubsystem extends SubsystemBase {
           Logger.recordOutput("Odometry/TrajectorySetpoint", targetPose);
         });*/
   }
-
+@Override
   public void periodic() {
+    SmartDashboard.putNumber("FL Angle", m_frontLeft.getState().angle.getDegrees());
+    SmartDashboard.putNumber("FR Angle", m_frontRight.getState().angle.getDegrees());
+    SmartDashboard.putNumber("RL Angle", m_rearLeft.getState().angle.getDegrees());
+    SmartDashboard.putNumber("RR Angle", m_rearRight.getState().angle.getDegrees());
     // Update the odometry in the periodic block
+    SwerveModulePosition[] positions = new SwerveModulePosition[] {
+          m_frontLeft.getPosition(),
+          m_frontRight.getPosition(),
+          m_rearLeft.getPosition(),
+          m_rearRight.getPosition()
+        };
+
     m_odometry.update(
         Rotation2d.fromDegrees(m_gyro.getAngle()),
         new SwerveModulePosition[] {
@@ -115,6 +131,10 @@ public class DriveSubsystem extends SubsystemBase {
           m_rearLeft.getPosition(),
           m_rearRight.getPosition()
         });
+        Pose2d pose = m_odometry.update(Rotation2d.fromDegrees(gyroOffset),positions);
+        m_field.setRobotPose(pose);
+        SmartDashboard.putData("Field", m_field);
+
   }
 
   public void resetGyro() {
@@ -144,6 +164,18 @@ public class DriveSubsystem extends SubsystemBase {
         };
 
     return modulestates;
+  }
+
+  public SwerveModulePosition[] getPosition() {
+    SwerveModulePosition[] modulepositions =
+        new SwerveModulePosition[] {
+          m_frontLeft.getPosition(),
+          m_frontRight.getPosition(),
+          m_rearLeft.getPosition(),
+          m_rearRight.getPosition()
+        };
+
+    return modulepositions;
   }
 
   /**
