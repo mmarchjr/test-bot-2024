@@ -147,7 +147,7 @@ public void execute() {
   } else {
     OIDriver1Controller.getHID().setRumble(RumbleType.kBothRumble,0);
   }
-} 
+}
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
@@ -159,7 +159,6 @@ public void execute() {
   public boolean isFinished() {
     return false;
   }
-
 
 }
 
